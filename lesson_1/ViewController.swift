@@ -26,23 +26,27 @@ class ViewController: UIViewController {
         view.backgroundColor = .systemBackground
         view.addSubview(customButton)
         setupConstraints()
-      
-        let action = UIAction { [weak self] _ in
-            UIView.animate(withDuration: 0.3) {
-                
-                self?.view.backgroundColor = UIColor.random()
-            }
-        }
-        customButton.addAction(action, for: .primaryActionTriggered)
-     
+        setupAction()
     }
     
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             customButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            customButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: view.frame.size.height / 3)
+            customButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -view.frame.size.height / 3)
         ])
+    }
+    
+    private func setupAction() {
+        let action = UIAction { [weak self] _ in
+            guard let self = self else { return }
+            let randomColor = UIColor.random()
+            
+            let secondVC = SecondViewController(chousenColor: randomColor)
+            navigationController?.pushViewController(secondVC, animated: true)
+        }
+        
+        customButton.addAction(action, for: .primaryActionTriggered)
     }
 
 }
