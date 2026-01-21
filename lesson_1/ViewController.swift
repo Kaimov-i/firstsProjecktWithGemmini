@@ -40,9 +40,7 @@ class ViewController: UIViewController {
     private func setupAction() {
         let action = UIAction { [weak self] _ in
             guard let self = self else { return }
-            let randomColor = UIColor.random()
-            
-            let secondVC = SecondViewController(chousenColor: randomColor)
+            let secondVC = SecondViewController()
             navigationController?.pushViewController(secondVC, animated: true)
         }
         

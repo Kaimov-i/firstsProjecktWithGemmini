@@ -8,53 +8,55 @@
 import UIKit
 
 class SecondViewController: UIViewController {
+
+    private let friends = ["Apple", "Pyton", "ilman", "Swift", "UIKit", "Xcode", "Tim Cook"]
     
-    let backgroundColor: UIColor
-    private let friends = ["Apple", "Swift", "UIKit", "Xcode", "Tim Cook"]
+    let friendModelView = FriendsViewModel()
     
-    let backButton: UIButton = {
-        var button = UIButton()
-        var config = UIButton.Configuration.plain()
-        config.title = "Back"
-        config.cornerStyle = .medium
-        config.titlePadding = 20
-        button.configuration = config
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.register(FriendCell.self, forCellReuseIdentifier: "friendCell")
+        return tableView
     }()
-    
-    init(chousenColor: UIColor) {
-        self.backgroundColor = chousenColor
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(backButton)
+        tableView.dataSource = self
+        tableView.delegate = self
+        view.addSubview(tableView)
         setupConstraints()
-        buttonTap()
-        view.backgroundColor = backgroundColor
         title = "Second View"
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            backButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            backButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
         ])
     }
+
     
-    private func buttonTap() {
-        let action = UIAction { [weak self ] _ in
-            guard let self = self else { return }
-            self.navigationController?.popViewController(animated: true)
-        }
-        
-        backButton.addAction(action, for: .touchUpInside)
+}
+
+extension SecondViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        friendModelView.numbersOfRows()
     }
     
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard  let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath) as? FriendCell else { return UITableViewCell() }
+    
+        let friend = friendModelView.getFriend(at: indexPath.row)
+        cell.configCell(with: friend)
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        print("\(friends[indexPath.row])")
+    }
 }
