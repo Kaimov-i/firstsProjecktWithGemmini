@@ -13,6 +13,14 @@ class SecondViewController: UIViewController {
     
     let friendModelView = FriendsViewModel()
     
+    private let loader: UIActivityIndicatorView = {
+        let indecator = UIActivityIndicatorView()
+        indecator.translatesAutoresizingMaskIntoConstraints = false
+        indecator.hidesWhenStopped = true
+        indecator.color = .black
+        return indecator
+    }()
+    
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -25,8 +33,10 @@ class SecondViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         view.addSubview(tableView)
+        view.addSubview(loader)
         setupConstraints()
         title = "Second View"
+        loadData()
     }
     
     private func setupConstraints() {
@@ -35,9 +45,28 @@ class SecondViewController: UIViewController {
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            loader.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            loader.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
         ])
     }
-
+    
+    private func loadData() {
+        loader.startAnimating()
+        
+        Task {
+            do {
+               try await friendModelView.loadFriends()
+                tableView.reloadData()
+                loader.stopAnimating()
+            } catch {
+                print(error.localizedDescription)
+                loader.stopAnimating()
+            }
+        }
+        
+        loader.stopAnimating()
+    }
     
 }
 
@@ -51,7 +80,9 @@ extension SecondViewController: UITableViewDataSource, UITableViewDelegate {
         guard  let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath) as? FriendCell else { return UITableViewCell() }
     
         let friend = friendModelView.getFriend(at: indexPath.row)
+
         cell.configCell(with: friend)
+        
         return cell
     }
     

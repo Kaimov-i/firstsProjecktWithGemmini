@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Friend {
+struct Friend: Codable {
     let name: String
     let avatarName: String
     let lastSeen: Date

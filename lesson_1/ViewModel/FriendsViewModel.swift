@@ -6,14 +6,19 @@
 //
 import Foundation
 
+@MainActor
 class FriendsViewModel {
     
-    private var friends: [Friend] = [
-            Friend(name: "Apple", avatarName: "applelogo", lastSeen: .now, isOnline: true),
-            Friend(name: "Ilman", avatarName: "person.circle.fill", lastSeen: .now, isOnline: false),
-            Friend(name: "Swift", avatarName: "bird", lastSeen: .now, isOnline: false),
-            Friend(name: "Tim Cook", avatarName: "person.fill", lastSeen: .now, isOnline: false)
-        ]
+    private var friends: [Friend] = []
+    
+    func loadFriends() async throws {
+        let networkManager = NetworkManager.shared
+        guard let friendsData = try? await networkManager.fetchFriends() else { return }
+        
+        self.friends = friendsData
+    }
+    
+    
     
     func numbersOfRows() -> Int {
         friends.count
