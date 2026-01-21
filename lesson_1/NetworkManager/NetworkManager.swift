@@ -19,7 +19,7 @@ class NetworkManager {
     
     func fetchFriends() async throws -> [Friend] {
         var dataF = try JSONEncoder().encode(friends)
-        try await Task.sleep(for: .seconds(2))
+        try await Task.sleep(for: .seconds(3))
         let friends = try JSONDecoder().decode([Friend].self, from: dataF)
         return friends
     }

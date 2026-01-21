@@ -14,10 +14,9 @@ class SecondViewController: UIViewController {
     let friendModelView = FriendsViewModel()
     
     private let loader: UIActivityIndicatorView = {
-        let indecator = UIActivityIndicatorView()
+        let indecator = UIActivityIndicatorView(style: .large)
         indecator.translatesAutoresizingMaskIntoConstraints = false
         indecator.hidesWhenStopped = true
-        indecator.color = .black
         return indecator
     }()
     
@@ -45,7 +44,7 @@ class SecondViewController: UIViewController {
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            loader.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            loader.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             loader.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
         ])
@@ -64,8 +63,6 @@ class SecondViewController: UIViewController {
                 loader.stopAnimating()
             }
         }
-        
-        loader.stopAnimating()
     }
     
 }
