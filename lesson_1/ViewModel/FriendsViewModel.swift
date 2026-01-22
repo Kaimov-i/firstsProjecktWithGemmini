@@ -27,4 +27,8 @@ class FriendsViewModel {
     func getFriend(at index: Int) -> Friend {
         friends[index]
     }
+    
+    func removeFriend(at index: Int) {
+        friends.remove(at: index)
+    }
 }
